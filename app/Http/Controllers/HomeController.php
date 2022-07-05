@@ -19,7 +19,6 @@ class HomeController extends Controller
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
             ->orderBy('ms.jml_barang_msk', 'asc')
-            ->groupBy('ba.nama_barang')
             ->get();
         // dd($barangMasuk);
         $a = [];
