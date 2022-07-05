@@ -56,6 +56,14 @@
                         enabled: true
                     }
                 },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Total pelamar perlowongan'
+                    }
+                },
                 legend: {
                     enabled: false
                 },
@@ -73,7 +81,7 @@
                     pointFormat: '<span style="color:{point.color}">{point.date} <br>{point.name}</span>: <b>{point.y:.0f}</b><br/>'
                 },
                 series: [{
-                    name: "Jumlah Pelamar",
+                    name: "Jumlah Barang",
                     colorByPoint: true,
                     data: @php echo json_encode($barangMasuk);
                      @endphp

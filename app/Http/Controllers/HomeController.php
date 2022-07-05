@@ -19,16 +19,23 @@ class HomeController extends Controller
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
             ->orderBy('ms.jml_barang_msk', 'asc')
+            ->groupBy('ba.nama_barang')
             ->get();
+        // dd($barangMasuk);
+        $a = [];
+        foreach ($barangMasuk as $data) {
+            $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
 
-            $a = [];
-            foreach ($barangMasuk as $data) {
-                $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
-                
-                array_push($a, $data->JML_BARANG_MSK);
-            }
-            // dd(json_encode($a));
-        
+            array_push($a, $data->JML_BARANG_MSK);
+        }
+
+        $c = [];
+        foreach ($barangMasuk as $data) {
+            $x['NAMA_BARANG'] = $data->NAMA_BARANG;
+
+            array_push($a, $data->NAMA_BARANG);
+        }
+
         $barangKeluar = DB::table('keluar as kl')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
@@ -44,7 +51,8 @@ class HomeController extends Controller
 
         return view('admin.dashboard', [
             'barangMasuk'   => $a,
-            'barangKeluar'  => $b
+            'barangKeluar'  => $b,
+            'namaBarang'    => $c
         ]);
     }
 
@@ -146,6 +154,9 @@ class HomeController extends Controller
         ]);
 
         return $pdf->download('Laporan-transaksi-barang-masuk.pdf');
+        // return view('gudang/transaksimasuk/pdf', [
+        //     'DaftarBarangMasuk' => $data
+        // ]);
     }
 
     public function TampilBarangMasuk(Request $request)

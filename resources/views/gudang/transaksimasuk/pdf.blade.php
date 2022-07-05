@@ -33,20 +33,33 @@
 
 <body>
     <div class="container">
-        <h3 class="text-center mt-2 mb-2">Laporan Transaksi Masuk</h3>
+        <div class="header" align="center">
+            <span class="mt-5 mb-2">CV Keke Saputra</span>
+            <br><br>
 
+            <span class="mt-2 mb-2">Jl.Kri Pulau Rani D/24 Surabaya Jawa Timur</span>
+            <h1>Laporan Barang Masuk</h1>
+            <span>Periode <b>Bulan 1 - bulan 2</b></small>
+        </div>
+
+        <br>
+        <div class="row">
+            <div class="col-md-6" align="left">
+                <b>{{ Session::get('user')[1] }}</b>
+            </div>
+            <div class="col-md-6" align="right">
+                <b>Tanggal Export : </b>{{ date('d-m-Y') }}
+            </div>
+        </div>
         <div class="table-responsive mt-3">
-            <table border="1" cellspacing="" cellpadding="4" width="100%">
+            <table border="0" cellspacing="" cellpadding="4" width="100%">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Nama Barang</th>
-                        <th>Supplier</th>
-                        <th>Tanggal</th>
-                        <th>Nama Karyawan</th>
-                        <th>Jumlah</th>
-                        <th>Harga Barang Beli</th>
-                        <th>Total</th>
+                        <th>Jumlah Masuk</th>
+                        <th>Nominal Barang</th>
+                        <th>Total Nilai</th>
                     </tr>
                 </thead>
 
@@ -60,13 +73,6 @@
                             <tr>
                                 <td>{{ $no }}</td>
                                 <td>{{ $item->NAMA_BARANG }}</td>
-                                <td>{{ $item->NAMA_SUPPLIER }}</td>
-
-                                <td>{{ Carbon\Carbon::parse($item->TANGGAL_MASUK)->format('d / M / Y') }}
-                                </td>
-                                <td>{{ $item->NAMA_KAR }}</td>
-                                {{-- <td>@php echo date_format( $item->TANGGAL_MASUK," %D %M %Y ") @endphp</td> --}}
-
                                 <td>{{ $item->JML_BARANG_MSK }} Unit</td>
 
                                 <td> @php   echo "Rp " . number_format($item->HARGA_BARANG_MASUK ,2,',','.');  @endphp </td>
@@ -84,6 +90,16 @@
                     @endif
                 </tbody>
             </table>
+
+            <br><br><br>
+        </div>
+        <div class="row">
+            <div class="col-md-6" align="left">
+                <span><b>Total Nilai Barang Berdasarkan Filter</b></span>
+            </div>
+            <div class="col-md-6" align="right">
+                Rp. x.xxx.xxx,-
+            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
