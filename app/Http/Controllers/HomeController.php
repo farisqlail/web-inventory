@@ -18,12 +18,12 @@ class HomeController extends Controller
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
-            ->orderBy('ms.jml_barang_msk', 'asc')
+            ->orderBy('ms.jml_barang_msk', 'desc')
             ->get();
         // dd($barangMasuk);
         $a = [];
         foreach ($barangMasuk as $data) {
-            $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
+            // $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
 
             array_push($a, $data->JML_BARANG_MSK);
         }
@@ -32,13 +32,14 @@ class HomeController extends Controller
         foreach ($barangMasuk as $data) {
             $x['NAMA_BARANG'] = $data->NAMA_BARANG;
 
-            array_push($a, $data->NAMA_BARANG);
+            array_push($c, $data->NAMA_BARANG);
         }
+
 
         $barangKeluar = DB::table('keluar as kl')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
-            ->orderBy('kl.jml_keluar', 'asc')
+            ->orderBy('kl.jml_keluar', 'desc')
             ->get();
 
         $b = [];
@@ -51,7 +52,7 @@ class HomeController extends Controller
         return view('admin.dashboard', [
             'barangMasuk'   => $a,
             'barangKeluar'  => $b,
-            'namaBarang'    => $c
+            'namaBarang' => $c,
         ]);
     }
 
@@ -124,38 +125,72 @@ class HomeController extends Controller
 
     public function exportBarangMasuk(Request $request)
     {
-        $filter = $request->get('filterDate');
+        $fromDate = $request->get('fromFilterDate');
+        $toDate = $request->get('toFilterDate');
+        $namaBarang = $request->get('namaBarang');
+
         $data = DB::table('masuk as ms')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
-            ->where('ms.TANGGAL_MASUK', 'like', '%' . $filter . '%')
+            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
+            ->whereBetween('ms.TANGGAL_MASUK', [$fromDate, $toDate])
             ->get();
+
 
         return View('gudang/transaksimasuk/filter', [
             'DaftarBarangMasuk' => $data,
-            'filter' => $filter
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'namaBarang' => $namaBarang,
         ]);
     }
 
-    public function pdfBarangMasuk(Request $request, $filter)
+    public function pdfBarangMasuk(Request $request)
     {
+
+        $fromDate = $request->from;
+        $toDate = $request->to;
+        $namaBarang = $request->search;
 
         $data = DB::table('masuk as ms')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
-            ->where('ms.TANGGAL_MASUK', 'like', '%' . $filter . '%')
+            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
+            ->whereBetween('ms.TANGGAL_MASUK', [$fromDate, $toDate])
             ->get();
 
         $pdf = PDF::loadView('gudang/transaksimasuk/pdf', [
+            'from' => $fromDate,
+            'to' => $toDate,
             'DaftarBarangMasuk' => $data
-        ]);
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->download('Laporan-transaksi-barang-masuk.pdf');
         // return view('gudang/transaksimasuk/pdf', [
         //     'DaftarBarangMasuk' => $data
         // ]);
+    }
+
+    public function pdf()
+    {
+        $fromDate = '2022-06-08';
+        $toDate = '2022-07-16';
+
+
+        $data = DB::table('keluar as kl')
+            ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
+            ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
+            ->whereBetween('kl.TANGGAL_KELUAR', [$fromDate, $toDate])
+            ->get();
+
+        return view('gudang/transaksikeluar/pdf', [
+            'from' => $fromDate,
+            'to' => $toDate,
+            'DaftarBarangKeluar' => $data
+        ]);
+        // return view('gudang/transaksikeluar/pdf');
     }
 
     public function TampilBarangMasuk(Request $request)
@@ -188,32 +223,58 @@ class HomeController extends Controller
 
     public function exportBarangKeluar(Request $request)
     {
-        $filter = $request->get('filterDate');
+        $fromDate = $request->get('fromFilterDate');
+        $toDate = $request->get('toFilterDate');
+        $namaBarang = $request->get('namaBarang');
+
         $data = DB::table('keluar as kl')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
-            ->where('kl.TANGGAL_KELUAR', 'like', '%' . $filter . '%')
+            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
+            ->whereBetween('kl.TANGGAL_KELUAR', [$fromDate, $toDate])
             ->get();
+
+        // dd($data);
 
         return View('gudang/transaksikeluar/filter', [
             'DaftarBarangKeluar' => $data,
-            'filter' => $filter
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'namaBarang' => $namaBarang
         ]);
     }
 
-    public function pdfBarangKeluar(Request $request, $filter)
+    public function pdfBarangKeluar(Request $request)
     {
+        $fromDate = $request->from;
+        $toDate = $request->to;
+        $namaBarang = $request->search;
+
         $data = DB::table('keluar as kl')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
             ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
-            ->where('kl.TANGGAL_KELUAR', 'like', '%' . $filter . '%')
+            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
+            ->whereBetween('kl.TANGGAL_KELUAR', [$fromDate, $toDate])
             ->get();
 
-        $pdf = PDF::loadView('gudang/transaksikeluar/pdf', [
-            'DaftarBarangKeluar' => $data
-        ]);
 
-        return $pdf->download('Laporan-transaksi-barang-masuk.pdf');
+        $pdf = PDF::loadView('gudang/transaksikeluar/pdf', [
+            'from' => $fromDate,
+            'to' => $toDate,
+            'DaftarBarangKeluar' => $data
+        ])->setPaper('a4', 'landscape');
+
+        // foreach ($data as  $q) {
+
+        //     $insertToDB = array(
+        //         'TANGGAL_PEMBELIAN' => $q->TANGGAL_KELUAR,
+        //     );
+
+        //     DB::table('pembelian')->insert($insertToDB);
+        // }
+
+
+        return $pdf->download('Laporan-transaksi-barang-keluar.pdf');
     }
 
     public function TampilBarangKeluar(Request $request)
@@ -309,5 +370,15 @@ class HomeController extends Controller
 
         return View('gudang/operasibarang/eoq/dataeoq')
             ->with('DataEOQ', $data);
+    }
+
+    public function TampilDataBarangROP()
+    {
+        $data = DB::table('barang as ss')
+            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->get();
+
+        return View('gudang/operasibarang/dataBarangRop')
+            ->with('DataBarangRop', $data);
     }
 }
