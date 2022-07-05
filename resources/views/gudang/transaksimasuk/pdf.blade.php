@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan Transaksi Masuk</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
 
     <style>
@@ -25,6 +24,16 @@
             }
         }
 
+        @media (max-width: 768px) {
+            body {
+                font-size: 12px;
+            }
+
+            /* h1 {
+                font-size: 24px;
+            } */
+        }
+
         /* table {
             border-collapse: collapse;
         } */
@@ -39,7 +48,7 @@
 
             <span class="mt-2 mb-2">Jl.Kri Pulau Rani D/24 Surabaya Jawa Timur</span>
             <h1>Laporan Barang Masuk</h1>
-            <span>Periode <b>Bulan 1 - bulan 2</b></small>
+            <span>Periode <b> {{ Carbon\Carbon::parse($from)->format('d  M  Y') }} - {{ Carbon\Carbon::parse($to)->format('d  M  Y') }}</b></small>
         </div>
 
         <br>
@@ -65,28 +74,32 @@
 
                 <tbody>
 
+                    <?php $totalSemua = 0; ?>
+
                     @php
-                        $no = 1;
+                    $no = 1;
                     @endphp
                     @if (!empty($DaftarBarangMasuk))
-                        @foreach ($DaftarBarangMasuk as $item)
-                            <tr>
-                                <td>{{ $no }}</td>
-                                <td>{{ $item->NAMA_BARANG }}</td>
-                                <td>{{ $item->JML_BARANG_MSK }} Unit</td>
+                    @foreach ($DaftarBarangMasuk as $item)
+                    <?php $total_nilai = $item->JML_BARANG_MSK * $item->HARGA_BARANG_MASUK;
+                    $totalSemua += $total_nilai ?>
+                    <tr>
+                        <td>{{ $no }}</td>
+                        <td>{{ $item->NAMA_BARANG }}</td>
+                        <td>{{ $item->JML_BARANG_MSK }} Unit</td>
 
-                                <td> @php   echo "Rp " . number_format($item->HARGA_BARANG_MASUK ,2,',','.');  @endphp </td>
+                        <td> @php echo "Rp " . number_format($item->HARGA_BARANG_MASUK ,2,',','.'); @endphp </td>
 
-                                <td> @php   echo "Rp " . number_format($item->JML_BARANG_MSK * $item->HARGA_BARANG_MASUK ,2,',','.');  @endphp </td>
-                            </tr>
-                            @php
-                                $no++;
-                            @endphp
-                        @endforeach
+                        <td> @php echo "Rp " . number_format($total_nilai ,2,',','.'); @endphp </td>
+                    </tr>
+                    @php
+                    $no++;
+                    @endphp
+                    @endforeach
                     @else
-                        <tr>
-                            <td colspan="8" align="center">Data Kosong</td>
-                        </tr>
+                    <tr>
+                        <td colspan="8" align="center">Data Kosong</td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
@@ -98,19 +111,17 @@
                 <span><b>Total Nilai Barang Berdasarkan Filter</b></span>
             </div>
             <div class="col-md-6" align="right">
-                Rp. x.xxx.xxx,-
+                @php echo "Rp " . number_format($totalSemua ,2,',','.'); @endphp
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-            integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
-            integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
-        </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
+    </script>
 
 
 </body>
