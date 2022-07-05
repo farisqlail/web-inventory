@@ -66,17 +66,21 @@ Route::get('/masterrop', 'HomeController@TampilDataROP');
 Route::get('/mastereoq', 'HomeController@TampilDataEOQ');
 
 
+Route::get('/databarangrop', 'HomeController@TampilDataBarangROP');
+Route::get('/pdf', 'HomeController@pdf');
+
+
 //**TAMPILAN TRANSAKSI BARANG MASUK */
 
 Route::get('/transaksibarangmasuk', 'HomeController@TampilBarangMasuk');
 Route::post('/transaksibarangmasuk/filter', 'HomeController@exportBarangMasuk');
-Route::get('/transaksibarangmasuk/export/{filter}', 'HomeController@pdfBarangMasuk');
+Route::get('/transaksibarangmasuk/export/', 'HomeController@pdfBarangMasuk');
 
 //**TAMPILAN TRANSAKSI BARANG KELUAR */
 
 Route::get('/transaksibarangkeluar', 'HomeController@TampilBarangKeluar');
 Route::post('/transaksibarangkeluar/filter', 'HomeController@exportBarangKeluar');
-Route::get('/transaksibarangkeluar/export/{filter}', 'HomeController@pdfBarangKeluar');
+Route::get('/transaksibarangkeluar/export/', 'HomeController@pdfBarangKeluar');
 
 
 
@@ -211,7 +215,3 @@ Route::post('/TambahDataReorderPoint', 'ROPController@OperasiTambahROP');
 Route::post('/TambahDataEOQ', 'EOQController@OperasiTambahEOQ');
 
 Route::post('/TambahSafetyFactor', 'SafetyFactorController@ProsesTambahSafetyFactor');
-
-
-
-
