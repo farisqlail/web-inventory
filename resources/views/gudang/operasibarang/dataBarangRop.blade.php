@@ -51,21 +51,26 @@
                                         $no = 1;
                                         @endphp
                                         @foreach ($DataBarangRop as $item)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-                                            <td>{{ $item->NAMA_BARANG }}</td>
-                                            <td>{{ Carbon\Carbon::parse($item->TANGGAL_ROP)->format('d / M / Y') }}</td>
-                                            <td>{{ $item->NILAI_ROP }} Unit</td>
-                                            {{-- <td>@php echo date_format( $item->TANGGAL_MASUK," %D %M %Y ") @endphp</td> --}}
-                                            @if ($item->STATUS_ROP == 0 )
-                                            <td><button class="btn btn-secondary">Non-Aktif</button></td>
-                                            @else
-                                            <td><button class="btn btn-warning">Aktif</button></td>
-                                            @endif
+                                        <?php if ($item->STOCK_BARANG < $item->NILAI_ROP) {
+                                        ?>
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $item->NAMA_BARANG }}</td>
+                                                <td>{{ Carbon\Carbon::parse($item->TANGGAL_ROP)->format('d / M / Y') }}</td>
+                                                <td>{{ $item->NILAI_ROP }} Unit</td>
+                                                {{-- <td>@php echo date_format( $item->TANGGAL_MASUK," %D %M %Y ") @endphp</td> --}}
+                                                @if ($item->STATUS_ROP == 0 )
+                                                <td><button class="btn btn-secondary">Non-Aktif</button></td>
+                                                @else
+                                                <td><button class="btn btn-warning">Aktif</button></td>
+                                                @endif
 
-                                        </tr>
+                                            </tr>
+                                            $no++;
+
+
+                                        <?php } ?>
                                         @php
-                                        $no++;
                                         @endphp
                                         @endforeach
                                     </tbody>
