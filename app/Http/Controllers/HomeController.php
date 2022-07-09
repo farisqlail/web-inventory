@@ -377,10 +377,19 @@ class HomeController extends Controller
     public function TampilDataBarangROP()
     {
         $data = DB::table('barang as ss')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', '=', '1')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
+<<<<<<< HEAD
 
 
+=======
+        // dd($data);
+>>>>>>> 9ac1c15e449a14c224d8f8b2356fe3d4e5dbc4e3
         return View('gudang/operasibarang/dataBarangRop')
             ->with('DataBarangRop', $data);
     }

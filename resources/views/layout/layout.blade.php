@@ -18,7 +18,7 @@
             },
             custom: {
                 "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands"],
-                urls: ['./public/assets/css/fonts.css']
+                urls: ["{{asset('./assets/css/fonts.css')}}"]
             },
             active: function() {
                 sessionStorage.fonts = true;
@@ -88,13 +88,13 @@
                         <li class="nav-item dropdown hidden-caret">
                             <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                                 <div class="avatar-sm">
-                                    <img src="public/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                                    <img src="{{asset('./assets/img/profile.jpg')}}" alt="..." class="avatar-img rounded-circle">
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
                                 <li>
                                     <div class="user-box">
-                                        <div class="avatar-lg"><img src="public/assets/img/profile.jpg" alt="image profile" class="avatar-img rounded"></div>
+                                        <div class="avatar-lg"><img src="{{asset('./assets/img/profile.jpg')}}" alt="image profile" class="avatar-img rounded"></div>
                                         <div class="u-text">
                                             <h4> {{ Session::get('user')[1] }}</h4>
                                             <p class="text-muted"> {{ Session::get('user')[3] }}</p>
@@ -123,7 +123,7 @@
                 <div class="sidebar-content">
                     <div class="user">
                         <div class="avatar-sm float-left mr-2">
-                            <img src="public/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                            <img src="{{asset('./assets/img/profile.jpg')}}" alt="..." class="avatar-img rounded-circle">
                         </div>
                         <div class="info">
                             <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
