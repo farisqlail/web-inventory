@@ -135,7 +135,7 @@ class HomeController extends Controller
             ->get();
 
         $pdf = PDF::loadView('gudang/operasibarang/databarangrop/pdf', [
-            'ataBarangRop' => $data
+            'DataBarangRop' => $data
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('Laporan-transaksi-barang-rop.pdf');
@@ -151,7 +151,7 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', '=', '1')
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
-        
+
         // dd($data);
 
         return view('gudang/operasibarang/databarangrop/pdf', [
