@@ -45,12 +45,6 @@
                                         Export PDF
                                     </a>
                                 </div>
-                                <div class="col col-lg-2 mt-2">
-                                    <a class="btn btn-primary btn-round ml-auto" href="transaksitambahbarangkeluar">
-                                        <i class="fa fa-plus"></i>
-                                        Tambah Data
-                                    </a>
-                                </div>
                             </div>
                         </div>
                         <div class="card-body">

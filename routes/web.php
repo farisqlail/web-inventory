@@ -70,6 +70,12 @@ Route::get('/databarangrop', 'HomeController@TampilDataBarangROP');
 Route::get('/pdf', 'HomeController@pdf');
 
 
+Route::get('/export-barang-rop', 'HomeController@pdfBarangRop');
+
+
+
+
+
 //**TAMPILAN TRANSAKSI BARANG MASUK */
 
 Route::get('/transaksibarangmasuk', 'HomeController@TampilBarangMasuk');
