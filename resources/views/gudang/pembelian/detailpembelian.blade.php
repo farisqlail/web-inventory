@@ -52,6 +52,10 @@
                                         </tbody>
                                     </table>
                                 </div>
+
+                                <div class="btn-export mt-3">
+                                    <a href="/pdf-detailpembelian" class="btn btn-block btn-primary">Cetak Barang</a>
+                                </div>
                             </div>
                         </div>
                     </div>

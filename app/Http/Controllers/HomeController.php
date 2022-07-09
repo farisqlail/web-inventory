@@ -143,13 +143,13 @@ class HomeController extends Controller
 
         foreach ($data as $q) {
             // if ($q->STOCK_BARANG < $q->NILAI_ROP) {
-                $insertToDB = array(
-                    'ID_BARANG' => $q->ID_BARANG,
-                    // 'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
-                    'TANGGAL_PEMBELIAN' => Carbon::now()->format('d-m-Y'),
-                );
+            $insertToDB = array(
+                'ID_BARANG' => $q->ID_BARANG,
+                // 'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
+                'TANGGAL_PEMBELIAN' => Carbon::now()->format('d-m-Y'),
+            );
 
-                DB::table('pembelian')->insert($insertToDB);
+            DB::table('pembelian')->insert($insertToDB);
             // }
         }
 
@@ -206,16 +206,34 @@ class HomeController extends Controller
     public function TampilDetailPembelian($id)
     {
         $data = DB::table('barang as ss')
-        ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
-        ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
-        ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
-        ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
-        ->where('rp.STATUS_ROP', '=', '1')
-        ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
-        ->get();
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', '=', '1')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->get();
         // dd($data);
         return View('gudang/pembelian/detailpembelian')
             ->with('data', $data);
+    }
+
+    public function pdfDetailPembelian()
+    {
+        $data = DB::table('barang as ss')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', '=', '1')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->get();
+
+        $pdf = PDF::loadView('gudang/pembelian/pdf', [
+            'DataBarangRop' => $data
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('Cetak-Rencana-Pembelian-Barang.pdf');
     }
 
     public function TampilPembelian()
