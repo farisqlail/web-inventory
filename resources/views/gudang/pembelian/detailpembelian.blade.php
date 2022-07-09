@@ -1,51 +1,57 @@
 @extends('layout.layout')
 
 @section('content')
-<div class="main-panel">
-    <div class="content">
-        <div class="page-inner">
-            <div class="page-header row">
-                <div class="col-10">
-                    <h4 class="page-title">Daftar Pembelian Barang</h4>
+    <div class="main-panel">
+        <div class="content">
+            <div class="page-inner">
+                <div class="page-header row">
+                    <div class="col-10">
+                        <h4 class="page-title">Daftar Pembelian Barang</h4>
+
+                    </div>
+                    <div class="col flo">
+                        <p><b>{{ Session::get('user')[1] }}</b></p>
+                        <p><b>Tanggal : {{ date('d-M-Y') }}</b></p>
+                    </div>
 
                 </div>
-                <div class="col flo">
-                    <p>{{ Session::get('user')[1] }}</p>
-                    <p>Tanggal : {{ date('d-m-Y') }}</p>
-                </div>
+                <div class="row">
 
-            </div>
-            <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
 
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex align-items-center">
-                                <!-- <h4 class="card-title">Data Pembelian</h4> -->
-                            </div>
-                        </div>
-                        <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="add-row" class="display table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Barang</th>
+                                                <th>Nama Supplier</th>
+                                                <th>Jumlah Barang</th>
+                                            </tr>
+                                        </thead>
 
-                            <div class="table-responsive">
-                                <table id="add-row" class="display table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama Barang</th>
-                                            <th>Nama Supplier</th>
-                                            <th>Jumlah Barang</th>
-                                        </tr>
-                                    </thead>
+                                        <tbody>
+                                            @if (!empty($data))
+                                                @foreach ($data as $item)
+                                                    @if ($item->STOCK_BARANG < $item->NILAI_ROP)
+                                                        <tr>
+                                                            <td>{{ $item->NAMA_BARANG }}</td>
+                                                            <td>{{ $item->NAMA_SUPPLIER }}</td>
+                                                            <td>{{ $item->STOCK_BARANG }}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <tr>
+                                                    <td>Data Kosong</td>
+                                                </tr>
+                                            @endif
 
-                                    <tbody>
 
-                                        <tr>
-                                            <td>{{ $data[0]->NAMA_BARANG }}</td>
-                                            <td>{{ $data[0]->NAMA_SUPPLIER}}</td>
-                                            <td>{{ $data[0]->STOCK_BARANG }}</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,6 +59,4 @@
             </div>
         </div>
     </div>
-</div>
-
 @endsection

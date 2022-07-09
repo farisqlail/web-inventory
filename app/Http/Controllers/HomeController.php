@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use RealRashid\SweetAlert\Facades\Alert;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -140,15 +141,16 @@ class HomeController extends Controller
 
         // dd($data)
 
-        foreach ($data as  $q) {
-            if ($q->STOCK_BARANG < $q->NILAI_ROP) {
+        foreach ($data as $q) {
+            // if ($q->STOCK_BARANG < $q->NILAI_ROP) {
                 $insertToDB = array(
                     'ID_BARANG' => $q->ID_BARANG,
-                    'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
+                    // 'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
+                    'TANGGAL_PEMBELIAN' => Carbon::now()->format('d-m-Y'),
                 );
 
                 DB::table('pembelian')->insert($insertToDB);
-            }
+            // }
         }
 
         return $pdf->download('Laporan-transaksi-barang-rop.pdf');
@@ -201,13 +203,16 @@ class HomeController extends Controller
     }
 
     // TampilDetailPembelian
-    public function TampilDetailPembelian(Request $request)
+    public function TampilDetailPembelian($id)
     {
-        $data = DB::table('pembelian as pb')
-            ->join('barang as ba', 'ba.ID_BARANG', '=', 'pb.ID_BARANG')
-            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ba.ID_SUPPLIER')
-            ->where('pb.ID_PEMBELIAN', '=', $request->id)
-            ->get();
+        $data = DB::table('barang as ss')
+        ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+        ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+        ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+        ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+        ->where('rp.STATUS_ROP', '=', '1')
+        ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+        ->get();
         // dd($data);
         return View('gudang/pembelian/detailpembelian')
             ->with('data', $data);
@@ -215,14 +220,21 @@ class HomeController extends Controller
 
     public function TampilPembelian()
     {
-        $data = DB::table('pembelian as pb')
+        $data = DB::table('pembelian')
+            ->select('TANGGAL_PEMBELIAN')
+            ->groupBy('TANGGAL_PEMBELIAN')
+            ->get();
+
+        $dataBarang = DB::table('pembelian as pb')
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'pb.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ba.ID_SUPPLIER')
             ->get();
 
         // dd($data);
-        return View('gudang/pembelian/pembelian')
-            ->with('DaftarDetailPembelian', $data);
+        return View('gudang/pembelian/pembelian', [
+            'countData' => $data,
+            'dataBarang' => $dataBarang
+        ]);
     }
 
 
