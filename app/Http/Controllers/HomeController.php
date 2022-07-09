@@ -23,7 +23,6 @@ class HomeController extends Controller
         // dd($barangMasuk);
         $a = [];
         foreach ($barangMasuk as $data) {
-            // $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
 
             array_push($a, $data->JML_BARANG_MSK);
         }
@@ -123,28 +122,44 @@ class HomeController extends Controller
             ->with('DaftarSupplier', $data2);
     }
 
-    public function exportBarangMasuk(Request $request)
+    public function pdfBarangRop()
     {
-        $fromDate = $request->get('fromFilterDate');
-        $toDate = $request->get('toFilterDate');
-        $namaBarang = $request->get('namaBarang');
 
-        $data = DB::table('masuk as ms')
-            ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
-            ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
-            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
-            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
-            ->whereBetween('ms.TANGGAL_MASUK', [$fromDate, $toDate])
+        $data = DB::table('barang as ss')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', '=', '1')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
 
+        $pdf = PDF::loadView('gudang/operasibarang/databarangrop/pdf', [
+            'ataBarangRop' => $data
+        ])->setPaper('a4', 'landscape');
 
-        return View('gudang/transaksimasuk/filter', [
-            'DaftarBarangMasuk' => $data,
-            'fromDate' => $fromDate,
-            'toDate' => $toDate,
-            'namaBarang' => $namaBarang,
+        return $pdf->download('Laporan-transaksi-barang-rop.pdf');
+    }
+
+    public function pdf()
+    {
+        $data = DB::table('barang as ss')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', '=', '1')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->get();
+
+        // dd($data);
+
+        return view('gudang/operasibarang/databarangrop/pdf', [
+            'DataBarangRop' => $data
         ]);
     }
+
+
 
     public function pdfBarangMasuk(Request $request)
     {
@@ -173,25 +188,7 @@ class HomeController extends Controller
         // ]);
     }
 
-    public function pdf()
-    {
-        $fromDate = '2022-06-08';
-        $toDate = '2022-07-16';
 
-
-        $data = DB::table('keluar as kl')
-            ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
-            ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
-            ->whereBetween('kl.TANGGAL_KELUAR', [$fromDate, $toDate])
-            ->get();
-
-        return view('gudang/transaksikeluar/pdf', [
-            'from' => $fromDate,
-            'to' => $toDate,
-            'DaftarBarangKeluar' => $data
-        ]);
-        // return view('gudang/transaksikeluar/pdf');
-    }
 
     public function TampilBarangMasuk(Request $request)
     {
@@ -339,6 +336,8 @@ class HomeController extends Controller
             ->with('DaftarSupplier', $data1);
     }
 
+
+
     public function TampilDataSafetyStock(Request $request)
     {
         $data = DB::table('safety_stock as ss')
@@ -382,8 +381,9 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', '=', '1')
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
-        // dd($data);
-        return View('gudang/operasibarang/dataBarangRop')
+
+
+        return View('gudang/operasibarang/databarangrop/databarangrop')
             ->with('DataBarangRop', $data);
     }
 }
