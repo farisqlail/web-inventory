@@ -7,8 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laporan Transaksi Masuk</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-        integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
 
     <style>
@@ -76,28 +75,28 @@
                 <tbody>
                     <?php $totalSemua = 0; ?>
                     @php
-                        $no = 1;
+                    $no = 1;
                     @endphp
                     @if (!empty($DataBarangRop))
-                        @foreach ($DataBarangRop as $item)
-                            <?php $total_nilai = $item->NILAI_SS * $item->HARGA_BARANG;
-                            $totalSemua += $total_nilai; ?>
-                            @if ($item->STOCK_BARANG < $item->NILAI_ROP)
-                                <tr>
-                                    <td style="width:2%;">{{ $no++ }}</td>
-                                    <td style="width:18%;">{{ $item->NAMA_BARANG }}</td>
-                                    <td style="width:20%;">{{ $item->NAMA_SUPPLIER }}</td>
-                                    <td style="width:15%;">{{ $item->NILAI_SS }} Unit</td>
-                                    <td style="width:20%;"> @php echo "Rp " . number_format( $item->HARGA_BARANG ,2,',','.'); @endphp </td>
-                                    <td style="width:25%;"> @php echo "Rp " . number_format( $total_nilai ,2,',','.'); @endphp </td>
-                                </tr>
-                            @endif
+                    @foreach ($DataBarangRop as $item)
+                    @if ($item->STOCK_BARANG < $item->NILAI_ROP)
+                        <?php $total_nilai = $item->STOCK_BARANG * $item->HARGA_BARANG;
+                        $totalSemua += $total_nilai; ?>
+                        <tr>
+                            <td style="width:2%;">{{ $no++ }}</td>
+                            <td style="width:18%;">{{ $item->NAMA_BARANG }}</td>
+                            <td style="width:20%;">{{ $item->NAMA_SUPPLIER }}</td>
+                            <td style="width:15%;">{{ $item->STOCK_BARANG }} Unit</td>
+                            <td style="width:20%;"> @php echo "Rp " . number_format( $item->HARGA_BARANG ,2,',','.'); @endphp </td>
+                            <td style="width:25%;"> @php echo "Rp " . number_format( $total_nilai ,2,',','.'); @endphp </td>
+                        </tr>
+                        @endif
                         @endforeach
-                    @else
+                        @else
                         <tr>
                             <td colspan="8" align="center">Data Kosong</td>
                         </tr>
-                    @endif
+                        @endif
                 </tbody>
             </table>
 
@@ -113,14 +112,11 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
-        integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous">
     </script>
 
 
