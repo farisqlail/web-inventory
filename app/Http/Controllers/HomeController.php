@@ -151,7 +151,7 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', '=', '1')
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
-
+        
         // dd($data);
 
         return view('gudang/operasibarang/databarangrop/pdf', [
@@ -381,7 +381,7 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', '=', '1')
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
-
+        // dd($data);
 
         return View('gudang/operasibarang/databarangrop/databarangrop')
             ->with('DataBarangRop', $data);
