@@ -126,17 +126,30 @@ class HomeController extends Controller
     {
 
         $data = DB::table('barang as ss')
-            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
             ->where('rp.STATUS_ROP', '=', '1')
-            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
 
         $pdf = PDF::loadView('gudang/operasibarang/databarangrop/pdf', [
             'DataBarangRop' => $data
         ])->setPaper('a4', 'landscape');
+
+        // dd($data)
+
+        foreach ($data as  $q) {
+            if ($q->STOCK_BARANG < $q->NILAI_ROP) {
+                $insertToDB = array(
+                    'ID_BARANG' => $q->ID_BARANG,
+                    'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
+                );
+
+                DB::table('pembelian')->insert($insertToDB);
+            }
+        }
 
         return $pdf->download('Laporan-transaksi-barang-rop.pdf');
     }
@@ -152,7 +165,6 @@ class HomeController extends Controller
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
 
-        // dd($data);
 
         return view('gudang/operasibarang/databarangrop/pdf', [
             'DataBarangRop' => $data
@@ -186,6 +198,31 @@ class HomeController extends Controller
         // return view('gudang/transaksimasuk/pdf', [
         //     'DaftarBarangMasuk' => $data
         // ]);
+    }
+
+    // TampilDetailPembelian
+    public function TampilDetailPembelian(Request $request)
+    {
+        $data = DB::table('pembelian as pb')
+            ->join('barang as ba', 'ba.ID_BARANG', '=', 'pb.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ba.ID_SUPPLIER')
+            ->where('pb.ID_PEMBELIAN', '=', $request->id)
+            ->get();
+        // dd($data);
+        return View('gudang/pembelian/detailpembelian')
+            ->with('data', $data);
+    }
+
+    public function TampilPembelian()
+    {
+        $data = DB::table('pembelian as pb')
+            ->join('barang as ba', 'ba.ID_BARANG', '=', 'pb.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ba.ID_SUPPLIER')
+            ->get();
+
+        // dd($data);
+        return View('gudang/pembelian/pembelian')
+            ->with('DaftarDetailPembelian', $data);
     }
 
 

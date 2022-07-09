@@ -73,7 +73,10 @@ Route::get('/pdf', 'HomeController@pdf');
 Route::get('/export-barang-rop', 'HomeController@pdfBarangRop');
 
 
+// DETAIL PEMBELIAN
+Route::get('/pembelian', 'HomeController@TampilPembelian');
 
+Route::get('/detail-pembelian/{id}', 'HomeController@TampilDetailPembelian');
 
 
 //**TAMPILAN TRANSAKSI BARANG MASUK */
