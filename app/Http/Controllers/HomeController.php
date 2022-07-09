@@ -23,7 +23,6 @@ class HomeController extends Controller
         // dd($barangMasuk);
         $a = [];
         foreach ($barangMasuk as $data) {
-            // $x['JML_BARANG_MSK'] = $data->JML_BARANG_MSK;
 
             array_push($a, $data->JML_BARANG_MSK);
         }
