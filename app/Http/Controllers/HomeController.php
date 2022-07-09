@@ -339,6 +339,8 @@ class HomeController extends Controller
             ->with('DaftarSupplier', $data1);
     }
 
+
+
     public function TampilDataSafetyStock(Request $request)
     {
         $data = DB::table('safety_stock as ss')
@@ -377,6 +379,7 @@ class HomeController extends Controller
         $data = DB::table('barang as ss')
             ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
             ->get();
+
 
         return View('gudang/operasibarang/dataBarangRop')
             ->with('DataBarangRop', $data);
