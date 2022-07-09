@@ -4,12 +4,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>Aplikasi Pengendalian Inventori</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-	<link rel="icon" href="public/assets/img/icon.ico" type="image/x-icon"/>
+	<link rel="icon" href="{{asset('./assets/img/icon.ico')}}" type="image/x-icon"/>
 
 
 
 	<!-- Fonts and icons -->
-	<script src="public/assets/js/plugin/webfont/webfont.min.js"></script>
+	<script src="{{asset('./assets/js/plugin/webfont/webfont.min.js')}}"></script>
 	<script>
 		WebFont.load({
 			google: {"families":["Open+Sans:300,400,600,700"]},
@@ -21,8 +21,8 @@
 	</script>
 
 	<!-- CSS Files -->
-	<link rel="stylesheet" href="public/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="public/assets/css/azzara.min.css">
+	<link rel="stylesheet" href="{{ asset('./assets/css/bootstrap.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('./assets/css/azzara.min.css') }}">
 </head>
 <body class="login">
     @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
@@ -37,11 +37,11 @@
 
 			<div class="login-form">
 				<div class="form-group form-floating-label">
-					<input id="email" name="email" type="text" class="form-control input-border-bottom" required>
+					<input id="email" name="email" type="text" class="form-control input-border-bottom" autocomplete="off" required>
 					<label for="email" class="placeholder">Email</label>
 				</div>
 				<div class="form-group form-floating-label">
-					<input id="password" name="password" type="password" class="form-control input-border-bottom" required>
+					<input id="password" name="password" type="password" class="form-control input-border-bottom" autocomplete="off" required>
 					<label for="password" class="placeholder">Password</label>
 					<div class="show-password">
 						<i class="flaticon-interface"></i>
@@ -104,11 +104,11 @@
 			</div>
 		</div> --}}
 	</div>
-	<script src="public/assets/js/core/jquery.3.2.1.min.js"></script>
-	<script src="public/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-	<script src="public/assets/js/core/popper.min.js"></script>
-	<script src="public/assets/js/core/bootstrap.min.js"></script>
-	<script src="public/assets/js/ready.js"></script>
+	<script src="{{ asset('./assets/js/core/jquery.3.2.1.min.js') }}"></script>
+	<script src="{{ asset('./assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
+	<script src="{{ asset('./assets/js/core/popper.min.js') }}"></script>
+	<script src="{{ asset('./assets/js/core/bootstrap.min.js') }}"></script>
+	<script src="{{ asset('./assets/js/ready.js') }}"></script>
     @include('sweetalert::alert')
 </body>
 </html>
