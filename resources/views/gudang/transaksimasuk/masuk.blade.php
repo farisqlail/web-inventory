@@ -28,6 +28,7 @@
                 <div class="ml-auto">
                     <button data-toggle="modal" data-target="#exampleModal" class="btn btn-success" style="margin-top: 10px;" type="submit">Filter</button>
                 </div>
+
             </div>
             <div class="row">
 
@@ -51,6 +52,7 @@
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover">
                                     <thead>
+
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Barang</th>
@@ -63,7 +65,6 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
 
                                         @php

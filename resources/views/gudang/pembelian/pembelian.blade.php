@@ -5,7 +5,7 @@
         <div class="content">
             <div class="page-inner">
                 <div class="page-header">
-                    <h4 class="page-title">Data Barang Reorder Point</h4>
+                    <h4 class="page-title">Data Pembelian</h4>
                     <ul class="breadcrumbs">
                         <li class="nav-home">
                             <a href="#">
@@ -16,13 +16,13 @@
                             <i class="flaticon-right-arrow"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="#">Reorder Point</a>
+                            <a href="#">Pembelian</a>
                         </li>
                         <li class="separator">
                             <i class="flaticon-right-arrow"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="#">Daftar Data Reorder Point</a>
+                            <a href="#">Daftar Data Pembelian</a>
                         </li>
                     </ul>
                 </div>
@@ -30,7 +30,11 @@
 
                     <div class="col-md-12">
                         <div class="card">
-
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <h4 class="card-title">Data Pembelian</h4>
+                                </div>
+                            </div>
                             <div class="card-body">
 
                                 <div class="table-responsive">
@@ -38,28 +42,33 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Nama Barang</th>
-                                                <th>Nama Supplier</th>
-                                                <th>Jumlah Barang</th>
+                                                <th>Jenis Pembelian</th>
+                                                <th>Tanggal Pembelian</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-
                                             @php
                                                 $no = 1;
                                             @endphp
-                                            @foreach ($DataBarangRop as $item)
-                                                @if ($item->STOCK_BARANG < $item->NILAI_ROP)
-                                                    <tr>
-                                                        <td>{{ $no++ }}</td>
-                                                        <td>{{ $item->NAMA_BARANG }}</td>
-                                                        <td>{{ $item->NAMA_SUPPLIER }}</td>
-                                                        </td>
-                                                        <td>{{ $item->NILAI_SS }} Unit</td>
-                                                    </tr>
-                                                @endif
+                                            @foreach ($countData as $item)
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td>Pembelian Barang</td>
+                                                    <td>{{ Carbon\Carbon::parse($item->TANGGAL_PEMBELIAN)->format('d / M / Y') }}
+                                                    </td>
+                                                    <td>
+                                                        <a href="detail-pembelian/{{ $item->TANGGAL_PEMBELIAN }}"
+                                                            class="btn btn-info btn-xs"> <i class="fa fa-info">
+                                                                View</i></a>
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -69,6 +78,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection

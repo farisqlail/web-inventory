@@ -25,9 +25,9 @@
                         <a href="#">Daftar Barang</a>
                     </li>
                 </ul>
-                <div class="ml-auto">
+                {{-- <div class="ml-auto">
                     <button data-toggle="modal" data-target="#exampleModal" class="btn btn-success" style="margin-top: 10px;" type="submit">Filter</button>
-                </div>
+                </div> --}}
             </div>
             <div class="row">
 
@@ -43,12 +43,6 @@
                                     <a class="btn btn-danger btn-round ml-auto" href="/transaksibarangkeluar/export?from={{$fromDate}}&to={{$toDate}}&search={{$namaBarang}}">
                                         <i class="fa fa-plus"></i>
                                         Export PDF
-                                    </a>
-                                </div>
-                                <div class="col col-lg-2 mt-2">
-                                    <a class="btn btn-primary btn-round ml-auto" href="transaksitambahbarangkeluar">
-                                        <i class="fa fa-plus"></i>
-                                        Tambah Data
                                     </a>
                                 </div>
                             </div>
