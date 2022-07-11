@@ -86,7 +86,7 @@
                             <td style="width:2%;">{{ $no++ }}</td>
                             <td style="width:18%;">{{ $item->NAMA_BARANG }}</td>
                             <td style="width:20%;">{{ $item->NAMA_SUPPLIER }}</td>
-                            <td style="width:15%;">{{ $item->STOCK_BARANG }} Unit</td>
+                            <td style="width:15%;">{{ $item->NILAI_EOQ }} Unit</td>
                             <td style="width:20%;"> @php echo "Rp " . number_format( $item->HARGA_BARANG ,2,',','.'); @endphp </td>
                             <td style="width:25%;"> @php echo "Rp " . number_format( $total_nilai ,2,',','.'); @endphp </td>
                         </tr>

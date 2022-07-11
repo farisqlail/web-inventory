@@ -243,12 +243,12 @@ class HomeController extends Controller
     public function pdfDetailPembelian()
     {
         $data = DB::table('barang as ss')
-            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'st.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
-            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('eoq as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
             ->where('rp.STATUS_ROP', '=', '1')
-            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
             ->get();
 
         $pdf = PDF::loadView('gudang/pembelian/pdf', [
@@ -463,14 +463,21 @@ class HomeController extends Controller
     public function TampilDataBarangROP()
     {
         $data = DB::table('barang as ss')
-            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->select('ss.ID_BARANG', 'ss.STATUS', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
             ->where('rp.STATUS_ROP', '=', '1')
-            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
+            ->where('ss.STATUS', 0)
+            ->groupBy('ss.ID_BARANG', 'ss.STATUS', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
             ->get();
         // dd($data);
+
+        $status = [
+            'status' => 1
+        ];
+
+        DB::table('barang')->update($status);
 
         return View('gudang/operasibarang/databarangrop/databarangrop')
             ->with('DataBarangRop', $data);
