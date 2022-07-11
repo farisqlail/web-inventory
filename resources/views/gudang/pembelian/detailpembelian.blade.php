@@ -38,7 +38,7 @@
                                                         <tr>
                                                             <td>{{ $item->NAMA_BARANG }}</td>
                                                             <td>{{ $item->NAMA_SUPPLIER }}</td>
-                                                            <td>{{ $item->STOCK_BARANG }}</td>
+                                                            <td>{{ $item->NILAI_EOQ }}</td>
                                                         </tr>
                                                     @endif
                                                 @endforeach

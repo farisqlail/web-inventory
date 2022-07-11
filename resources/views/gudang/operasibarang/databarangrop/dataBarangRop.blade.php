@@ -64,7 +64,7 @@
                                                 <td>{{ $item->NAMA_BARANG }}</td>
                                                 <td>{{ $item->NAMA_SUPPLIER }}</td>
                                                 </td>
-                                                <td>{{ $item->NILAI_SS }} Unit</td>
+                                                <td>{{ $item->NILAI_EOQ }} Unit</td>
                                             </tr>
                                             @endif
                                             @endforeach
