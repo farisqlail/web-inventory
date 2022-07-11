@@ -27,7 +27,7 @@ class AuthController extends Controller
             // $request->session()->put('user', $log->NAMA_KARYAWAN);
             $request->session()->put('user', [$log->ID_KAR, $log->NAMA_KAR, $log->JABATAN,$log->EMAIL]);
             Alert::success('Berhasil Masuk', 'Selamat Anda Berhasil Masuk ');
-            return redirect('home');
+            return redirect('/dashboard');
         } else {
 
             Alert::error('Email dan Password Anda Salah');

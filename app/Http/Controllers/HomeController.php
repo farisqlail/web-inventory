@@ -173,7 +173,29 @@ class HomeController extends Controller
         ]);
     }
 
+    public function exportBarangMasuk(Request $request)
+    {
+        $fromDate = $request->get('fromFilterDate');
+        $toDate = $request->get('toFilterDate');
+        $namaBarang = $request->get('namaBarang');
 
+        $data = DB::table('masuk as ms')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
+            ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
+            ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
+            ->where('ba.NAMA_BARANG', 'like', '%' . $namaBarang . '%')
+            ->whereBetween('ms.TANGGAL_MASUK', [$fromDate, $toDate])
+            ->get();
+
+        // dd($data);
+
+        return View('gudang/transaksimasuk/filter', [
+            'DaftarBarangMasuk' => $data,
+            'fromDate' => $fromDate,
+            'toDate' => $toDate,
+            'namaBarang' => $namaBarang
+        ]);
+    }
 
     public function pdfBarangMasuk(Request $request)
     {
