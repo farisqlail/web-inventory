@@ -54,7 +54,7 @@
                                 </div>
 
                                 <div class="btn-export mt-3">
-                                    <a href="/pdf-detailpembelian" class="btn btn-block btn-primary">Cetak Barang</a>
+                                    <a href="/pdf-detailpembelian/{{ $data[0]->TANGGAL_PEMBELIAN }}" class="btn btn-block btn-primary">Cetak Barang</a>
                                 </div>
                             </div>
                         </div>

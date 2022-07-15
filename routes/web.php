@@ -75,7 +75,7 @@ Route::get('/export-barang-rop', 'HomeController@pdfBarangRop');
 
 // DETAIL PEMBELIAN
 Route::get('/pembelian', 'HomeController@TampilPembelian');
-Route::get('/pdf-detailpembelian', 'HomeController@pdfDetailPembelian');
+Route::get('/pdf-detailpembelian/{id}', 'HomeController@pdfDetailPembelian');
 Route::get('/detail-pembelian/{id}', 'HomeController@TampilDetailPembelian');
 
 
