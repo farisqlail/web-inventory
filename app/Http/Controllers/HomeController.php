@@ -501,4 +501,19 @@ class HomeController extends Controller
         return View('gudang/operasibarang/databarangrop/databarangrop')
             ->with('DataBarangRop', $data);
     }
+
+    public function barangKurang()
+    {
+        $data = DB::table('rop as rp')
+        ->select('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+        ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+        ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
+        ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+        ->where('rp.STATUS_ROP', 1)
+        ->groupBy('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
+        ->get();
+
+        return View('gudang/operasibarang/databarangrop/dataBarangKurang')
+        ->with('DataBarangRop', $data);
+    }
 }

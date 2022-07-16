@@ -68,7 +68,7 @@ Route::get('/mastereoq', 'HomeController@TampilDataEOQ');
 
 Route::get('/databarangrop', 'HomeController@TampilDataBarangROP');
 Route::get('/pdf', 'HomeController@pdf');
-
+Route::get('/barang-kurang', 'HomeController@barangKurang');
 
 Route::get('/export-barang-rop', 'HomeController@pdfBarangRop');
 
