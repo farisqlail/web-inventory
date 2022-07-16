@@ -18,7 +18,7 @@ class ROPController extends Controller
             ->where('STATUS_OP', '=', 1)
             ->where('STATUS_SS', '=', 1)
             ->get();
-            
+
         return View('gudang/operasibarang/rop/perhitunganrop')
             ->with('DataBarang', $data);
     }
