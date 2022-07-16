@@ -34,13 +34,11 @@
                                         <tbody>
                                             @if (!empty($data))
                                                 @foreach ($data as $item)
-                                                    @if ($item->STOCK_BARANG < $item->NILAI_ROP)
-                                                        <tr>
-                                                            <td>{{ $item->NAMA_BARANG }}</td>
-                                                            <td>{{ $item->NAMA_SUPPLIER }}</td>
-                                                            <td>{{ $item->NILAI_EOQ }}</td>
-                                                        </tr>
-                                                    @endif
+                                                    <tr>
+                                                        <td>{{ $item->NAMA_BARANG }}</td>
+                                                        <td>{{ $item->NAMA_SUPPLIER }}</td>
+                                                        <td>{{ $item->NILAI_EOQ }}</td>
+                                                    </tr>
                                                 @endforeach
                                             @else
                                                 <tr>
@@ -54,7 +52,8 @@
                                 </div>
 
                                 <div class="btn-export mt-3">
-                                    <a href="/pdf-detailpembelian/{{ $data[0]->TANGGAL_PEMBELIAN }}" class="btn btn-block btn-primary">Cetak Barang</a>
+                                    <a href="/pdf-detailpembelian/{{ $data[0]->TANGGAL_PEMBELIAN }}"
+                                        class="btn btn-block btn-primary">Cetak Barang</a>
                                 </div>
                             </div>
                         </div>

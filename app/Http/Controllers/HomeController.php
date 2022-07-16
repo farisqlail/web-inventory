@@ -148,6 +148,7 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', '=', '1')
             ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
             ->get();
+            // dd($data);
 
         $pdf = PDF::loadView('gudang/operasibarang/databarangrop/pdf', [
             'DataBarangRop' => $data
@@ -160,7 +161,7 @@ class HomeController extends Controller
             $insertToDB = array(
                 'ID_BARANG' => $q->ID_BARANG,
                 // 'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
-                'TANGGAL_PEMBELIAN' => Carbon::now()->format('d-m-Y'),
+                'TANGGAL_PEMBELIAN' => Carbon::now(),
             );
 
             DB::table('pembelian')->insert($insertToDB);
@@ -479,20 +480,23 @@ class HomeController extends Controller
     public function TampilDataBarangROP()
     {
         $data = DB::table('rop as rp')
-            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->select('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
-            ->where('rp.STATUS_ROP', '=', 1)
-            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
+            ->where('rp.STATUS_ROP', 1)
+            ->groupBy('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
             ->get();
         // dd($data);
 
-        // $status = [
-        //     'status' => 1
-        // ];
+        $status = [
+            'STATUS_ROP' => 0
+        ];
 
-        // DB::table('barang')->update($status);
+        if($data[0]->STOCK_BARANG >= $data[0]->NILAI_ROP)
+        {
+            DB::table('rop')->where('ID_ROP', '=', $data[0]->ID_ROP)->update($status);
+        }
 
         return View('gudang/operasibarang/databarangrop/databarangrop')
             ->with('DataBarangRop', $data);
