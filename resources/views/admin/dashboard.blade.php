@@ -3,17 +3,21 @@
 @section('content')
     <div class="main-panel">
         <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    @foreach ($dataKurang as $item)
+                        <div class="col-sm">
+                            <div class="alert alert-warning mt-3 ml-auto" role="alert">
+                                Stok barang {{ $item->NAMA_BARANG }} kurang dari rop!!
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
             <div class="page-inner">
-
-                @foreach ($dataKurang as $item)
-                    <div class="alert alert-warning mt-3 ml-auto" style="width: 30%;" role="alert">
-                       Stok barang {{ $item->NAMA_BARANG }} kurang dari rop!!
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endforeach
-
                 <div class="page-header">
                     <h4 class="page-title">Dashboard</h4>
                 </div>

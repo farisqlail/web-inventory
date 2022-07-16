@@ -61,7 +61,7 @@
 
                                         <tbody>
 
-                                            @php
+                                            {{-- @php
                                                 $no = 1;
                                             @endphp
                                             @foreach ($DataBarangRop as $item)
@@ -74,7 +74,7 @@
                                                         <td>{{ $item->NILAI_EOQ }} Unit</td>
                                                     </tr>
                                                 @endif
-                                            @endforeach
+                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>

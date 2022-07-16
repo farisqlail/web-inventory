@@ -54,7 +54,7 @@ class HomeController extends Controller
             ->where('rp.STATUS_ROP', 1)
             ->get();
         // dd($dataKurang);
-        
+
         // foreach ($dataKurang as $item) {
         //     dd($item->NAMA_BARANG);
         //     if ($item->STOCK_BARANG < $item->NILAI_ROP) {
@@ -139,16 +139,15 @@ class HomeController extends Controller
 
     public function pdfBarangRop()
     {
-
-        $data = DB::table('barang as ss')
-            ->select('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'st.NILAI_SS', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
-            ->join('rop as rp', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
-            ->join('safety_stock as st', 'st.ID_BARANG', '=', 'ss.ID_BARANG')
+        $data = DB::table('rop as rp')
+            ->select('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
-            ->where('rp.STATUS_ROP', '=', '1')
-            ->groupBy('ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'rp.TANGGAL_ROP', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'st.NILAI_SS', 'sp.NAMA_SUPPLIER')
+            ->where('rp.STATUS_ROP', 1)
+            ->groupBy('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.HARGA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
             ->get();
-            // dd($data);
+        // dd($data);
 
         $pdf = PDF::loadView('gudang/operasibarang/databarangrop/pdf', [
             'DataBarangRop' => $data
@@ -161,7 +160,7 @@ class HomeController extends Controller
             $insertToDB = array(
                 'ID_BARANG' => $q->ID_BARANG,
                 // 'TANGGAL_PEMBELIAN' => $q->TANGGAL_ROP,
-                'TANGGAL_PEMBELIAN' => Carbon::now(),
+                'TANGGAL_PEMBELIAN' => date('d-m-Y H:i:s'),
             );
 
             DB::table('pembelian')->insert($insertToDB);
@@ -480,12 +479,12 @@ class HomeController extends Controller
     public function TampilDataBarangROP()
     {
         $data = DB::table('rop as rp')
-            ->select('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->select('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
             ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
             ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
             ->where('rp.STATUS_ROP', 1)
-            ->groupBy('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
+            ->groupBy('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
             ->get();
         // dd($data);
 
@@ -493,8 +492,7 @@ class HomeController extends Controller
             'STATUS_ROP' => 0
         ];
 
-        if($data[0]->STOCK_BARANG >= $data[0]->NILAI_ROP)
-        {
+        if ($data[0]->STOCK_BARANG >= $data[0]->NILAI_ROP) {
             DB::table('rop')->where('ID_ROP', '=', $data[0]->ID_ROP)->update($status);
         }
 
@@ -505,15 +503,15 @@ class HomeController extends Controller
     public function barangKurang()
     {
         $data = DB::table('rop as rp')
-        ->select('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
-        ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
-        ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
-        ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
-        ->where('rp.STATUS_ROP', 1)
-        ->groupBy('rp.ID_ROP','ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
-        ->get();
+            ->select('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'eq.NILAI_EOQ', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'sp.NAMA_SUPPLIER')
+            ->join('barang as ss', 'rp.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('eoq as eq', 'eq.ID_BARANG', '=', 'ss.ID_BARANG')
+            ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ss.ID_SUPPLIER')
+            ->where('rp.STATUS_ROP', 1)
+            ->groupBy('rp.ID_ROP', 'ss.ID_BARANG', 'ss.NAMA_BARANG', 'ss.STOCK_BARANG', 'rp.NILAI_ROP', 'eq.NILAI_EOQ', 'sp.NAMA_SUPPLIER')
+            ->get();
 
         return View('gudang/operasibarang/databarangrop/dataBarangKurang')
-        ->with('DataBarangRop', $data);
+            ->with('DataBarangRop', $data);
     }
 }
