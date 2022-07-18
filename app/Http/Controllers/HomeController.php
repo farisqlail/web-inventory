@@ -449,7 +449,7 @@ class HomeController extends Controller
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'ss.ID_BARANG')
             ->where('STATUS_SS', '=', 1)
             ->get();
-
+// dd($data);
         return View('gudang/operasibarang/safetystock/safestock')
             ->with('DataSafetyStock', $data);
     }
