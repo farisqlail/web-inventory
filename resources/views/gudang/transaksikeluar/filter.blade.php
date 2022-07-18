@@ -39,12 +39,6 @@
                                     <h4 class="card-title">Data Barang Masuk</h4>
                                     <p>Menampilkan data <b>'{{$namaBarang}}'</b> dari tanggal {{ Carbon\Carbon::parse($fromDate)->format('d M Y') }} sampai tanggal {{ Carbon\Carbon::parse($toDate)->format('d M Y') }}</p>
                                 </div>
-                                <div class="col-md-auto mt-2">
-                                    <a class="btn btn-danger btn-round ml-auto" href="/transaksibarangkeluar/export?from={{$fromDate}}&to={{$toDate}}&search={{$namaBarang}}">
-                                        <i class="fa fa-plus"></i>
-                                        Export PDF
-                                    </a>
-                                </div>
                             </div>
                         </div>
                         <div class="card-body">

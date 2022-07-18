@@ -395,6 +395,22 @@ class HomeController extends Controller
             ->with('DaftarBarangKeluar', $data);
     }
 
+    public function tampilExportBarangKeluar()
+    {
+        $data = DB::table('keluar as kl')
+            ->join('barang as ba', 'ba.ID_BARANG', '=', 'kl.ID_BARANG')
+            ->join('karyawan as ka', 'ka.ID_KAR', '=', 'kl.ID_KAR')
+            ->get();
+
+        $data1 = DB::table('barang')
+            ->get();
+        $data2 = DB::table('karyawan')
+            ->get();
+
+        return View('gudang/transaksikeluar/exportBarangKeluar')
+            ->with('DaftarBarangKeluar', $data);
+    }
+
     public function TampilTambahBarangMasuk(Request $request)
     {
 
@@ -441,7 +457,33 @@ class HomeController extends Controller
             ->with('DaftarSupplier', $data1);
     }
 
+    public function tampilExportBarangMasuk(Request $request)
+    {
+        $filter = $request->get('filterDate');
+        if ($filter) {
+            $data = DB::table('masuk as ms')
+                ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
+                ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
+                ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
+                ->where('ms.TANGGAL_MASUK', 'like', '%' . $filter . '%')
+                ->get();
+        } else {
+            $data = DB::table('masuk as ms')
+                ->join('barang as ba', 'ba.ID_BARANG', '=', 'ms.ID_BARANG')
+                ->join('karyawan as ka', 'ka.ID_KAR', '=', 'ms.ID_KAR')
+                ->join('supplier as sp', 'sp.ID_SUPPLIER', '=', 'ms.ID_SUPPLIER')
+                ->get();
+        }
+        $data1 = DB::table('barang')
+            ->get();
+        $data2 = DB::table('supplier')
+            ->get();
+        $data3 = DB::table('karyawan')
+            ->get();
 
+        return View('gudang/transaksimasuk/exportTransaksiMasuk')
+            ->with('DaftarBarangMasuk', $data);
+    }
 
     public function TampilDataSafetyStock(Request $request)
     {
@@ -449,7 +491,7 @@ class HomeController extends Controller
             ->join('barang as ba', 'ba.ID_BARANG', '=', 'ss.ID_BARANG')
             ->where('STATUS_SS', '=', 1)
             ->get();
-// dd($data);
+        // dd($data);
         return View('gudang/operasibarang/safetystock/safestock')
             ->with('DataSafetyStock', $data);
     }
