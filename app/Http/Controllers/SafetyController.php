@@ -13,13 +13,14 @@ class SafetyController extends Controller
     public function TampilTambahSafetyStock(Request $request)
     {
         $data = DB::table('barang as ba')
-        ->join('operasi as op', 'op.ID_BARANG' , '=', 'ba.ID_BARANG' )
-        ->join('safety_factor as sf', 'sf.ID_BARANG' , '=', 'ba.ID_BARANG' )
-        ->where('STATUS_OP', '=', 1)
-        ->where('STATUS_SAFE', '=', 1)
-        ->get();
+            ->join('operasi as op', 'op.ID_BARANG', '=', 'ba.ID_BARANG')
+            ->join('safety_factor as sf', 'sf.ID_BARANG', '=', 'ba.ID_BARANG')
+            ->where('STATUS_OP', '=', 1)
+            ->where('STATUS_SAFE', '=', 1)
+            ->get();
+            
         return View('gudang/operasibarang/safetystock/perhitungansafe')
-        ->with('DataBarang', $data);
+            ->with('DataBarang', $data);
     }
 
     public function TampilSafetyStockAjax(Request $request)
@@ -28,18 +29,18 @@ class SafetyController extends Controller
 
 
         $data1 = DB::table('safety_factor')
-        ->select('NILAI_SAFE')
-        ->where('ID_BARANG', '=', $ID_BARANG)
-        ->where('STATUS_SAFE', '=', 1)
-        ->first();
+            ->select('NILAI_SAFE')
+            ->where('ID_BARANG', '=', $ID_BARANG)
+            ->where('STATUS_SAFE', '=', 1)
+            ->first();
 
         $year = Carbon::now()->year;
 
         $data2 =  DB::table('operasi')
-        ->where(DB::raw('date_format(TANGGAL_OP, "%Y")'), '=', $year)
-        ->where('ID_BARANG', '=', $ID_BARANG)
-        ->where('STATUS_OP', '=', 1)
-        ->first();
+            ->where(DB::raw('date_format(TANGGAL_OP, "%Y")'), '=', $year)
+            ->where('ID_BARANG', '=', $ID_BARANG)
+            ->where('STATUS_OP', '=', 1)
+            ->first();
 
         // $hasil = $data2->KEBUTUHAN_BARANG_BL * $data1->NILAI_SAFE;
 
@@ -57,33 +58,28 @@ class SafetyController extends Controller
 
 
         return View('gudang/operasibarang/safetystock/ajax')
-        ->with('DataSafetyFactor', $data1)
-        ->with('DataSD', $data2)
-        ->with('hasil',round($hasil));
+            ->with('DataSafetyFactor', $data1)
+            ->with('DataSD', $data2)
+            ->with('hasil', round($hasil));
     }
 
     public function OperasiTambahSafetyStock(Request $request)
     {
-            $data = array(
+        $data = array(
             'ID_BARANG' => $request->input('barang'),
             'TANGGAL_SS' => $request->input('tgl_ss'),
             'NILAI_SS' => $request->input('nilai_ss'),
             'NILAI_STANDARD' => $request->input('nilai_sd'),
             'STATUS_SS' => $request->input('status_ss'),
         );
-
+        // dd($data);
         $data2 = array(
             'STATUS_SS' => 0
         );
 
-        DB::table('safety_stock')->where('ID_BARANG','=', $request->input('barang'))->update($data2);
+        DB::table('safety_stock')->where('ID_BARANG', '=', $request->input('barang'))->update($data2);
         DB::table('safety_stock')->insert($data);
         Alert::success('Data Safety Stock', 'Data Berhasil Ditambahkan');
         return Redirect::to('masterss');
-
     }
-
-
-
-
 }

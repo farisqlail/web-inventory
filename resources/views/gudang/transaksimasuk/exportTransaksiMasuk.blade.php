@@ -25,9 +25,10 @@
                         <a href="#">Daftar Barang</a>
                     </li>
                 </ul>
-                {{-- <div class="ml-auto">
+                <div class="ml-auto">
                     <button data-toggle="modal" data-target="#exampleModal" class="btn btn-success" style="margin-top: 10px;" type="submit">Filter</button>
-                </div> --}}
+                </div>
+
             </div>
             <div class="row">
 
@@ -37,8 +38,6 @@
                             <div class="row">
                                 <div class="col mt-3">
                                     <h4 class="card-title">Data Barang Masuk</h4>
-
-                                    <p>Menampilkan data <b>'{{$namaBarang}}'</b> dari tanggal {{ Carbon\Carbon::parse($fromDate)->format('d M Y') }} sampai tanggal {{ Carbon\Carbon::parse($toDate)->format('d M Y') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -47,6 +46,7 @@
                             <div class="table-responsive">
                                 <table id="add-row" class="display table table-striped table-hover">
                                     <thead>
+
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Barang</th>
@@ -59,13 +59,11 @@
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
 
                                         @php
                                         $no = 1;
                                         @endphp
-                                        @if (!empty($DaftarBarangMasuk))
                                         @foreach ($DaftarBarangMasuk as $item)
                                         <tr>
                                             <td>{{ $no }}</td>
@@ -90,11 +88,6 @@
                                         $no++;
                                         @endphp
                                         @endforeach
-                                        @else
-                                        <tr>
-                                            <td colspan="8" align="center">Data Kosong</td>
-                                        </tr>
-                                        @endif
                                     </tbody>
                                 </table>
                             </div>
